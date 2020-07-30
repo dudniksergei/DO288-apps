@@ -1,0 +1,50 @@
+bash-4.4$ cat /usr/libexec/s2i/run 
+#!/bin/bash -e
+#
+# S2I run script for the 's2i-do288-go' image.
+# The run script executes the server that runs your application.
+#
+# For more information see the documentation:
+# https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+# Run the app
+exec /opt/app-root/app
+bash-4.4$ cat /usr/libexec/s2i/assemble 
+#!/bin/bash -e
+#
+# S2I assemble script for the 's2i-do288-go' image.
+# The 'assemble' script builds your application source so that it is ready to run.
+#
+# For more information refer to the documentation:
+# https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+if [[ "$1" == "-h" ]]; then
+  # If the 's2i-do288-go' assemble script is executed with '-h' flag,
+  # print the usage.
+  exec /usr/libexec/s2i/usage
+fi
+
+echo "---> Installing application source..."
+cp -Rf /tmp/src/. /opt/app-root/
+
+echo "---> Building application from source..."
+go build app.go
+bash-4.4$ cat /usr/libexec/s2i/         
+assemble  run       usage     
+bash-4.4$ cat /usr/libexec/s2i/usage 
+#!/bin/bash -e
+cat <<EOF
+This is the s2i-do288-go S2I image:
+To use it, install S2I: https://github.com/openshift/source-to-image
+
+Sample invocation:
+
+s2i build git://<source code> s2i-do288-go <application image>
+
+You can then run the resulting image via:
+docker run <application image>
+EOF
+bash-4.4$ 
+
